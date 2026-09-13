@@ -1,67 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OurGram Secure</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OurGram</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:system-ui}
-body{background:#111b21;color:white;height:100vh}
+body{background:#111b21;color:#e9edef;height:100vh;overflow:hidden}
 #lock{position:fixed;inset:0;background:#111b21;display:flex;align-items:center;justify-content:center;z-index:9999;padding:20px}
-.box{background:#202c33;padding:28px;border-radius:16px;width:100%;max-width:340px;text-align:center}
-.box input{width:100%;padding:13px;border-radius:10px;border:none;background:#2a3942;color:#fff;margin-top:15px;outline:none}
-.box button{width:100%;padding:13px;border:none;border-radius:10px;background:#00a884;color:#fff;font-weight:700;margin-top:12px;cursor:pointer}
-#app{display:none;height:100vh;flex-direction:column}
-.top{background:#202c33;padding:12px 16px;display:flex;align-items:center;gap:10px}
-#msgs{flex:1;overflow:auto;padding:16px;background:#0b141a}
-.bubble{max-width:70%;padding:8px 12px;border-radius:8px;margin-bottom:8px;font-size:14px}
+.lock-card{background:#202c33;padding:32px 26px;border-radius:18px;width:100%;max-width:360px;text-align:center}
+.lock-card input{width:100%;padding:14px;border-radius:12px;border:none;background:#2a3942;color:#fff;margin-top:18px}
+.lock-card button{width:100%;padding:14px;border:none;border-radius:12px;background:#00a884;color:#fff;font-weight:700;margin-top:14px}
+#app{display:none;height:100vh}
+.app-wrap{display:flex;height:100vh}
+.sidebar{width:30%;min-width:320px;background:#111b21;border-right:1px solid #222d34;display:flex;flex-direction:column}
+.avatar{width:40px;height:40px;border-radius:50%;background:#00a884;display:flex;align-items:center;justify-content:center;font-weight:700}
+#msgs{flex:1;overflow:auto;padding:20px;background:#0b141a}
+.bubble{max-width:65%;padding:8px 10px;border-radius:8px;margin-bottom:8px;font-size:14px}
 .me{background:#005c4b;margin-left:auto}
 .other{background:#202c33}
-.bar{background:#202c33;padding:10px;display:flex;gap:8px}
-.bar input{flex:1;padding:12px;border-radius:22px;border:none;background:#2a3942;color:#fff;outline:none}
-.bar button{width:44px;height:44px;border-radius:50%;border:none;background:#00a884;color:#fff;cursor:pointer}
+.bar{background:#202c33;padding:8px;display:flex;gap:8px}
+.bar input{flex:1;padding:12px;border-radius:22px;border:none;background:#2a3942;color:#fff}
+@media(max-width:750px){.sidebar{display:none}.bubble{max-width:85%}}
 </style>
 </head>
 <body>
-<div id="lock">
-<div class="box">
-<h2>🔒 OurGram Private</h2>
-<p style="color:#8696a0;font-size:13px;margin-top:8px">Sirf password wale hi andar aa sakte hain</p>
-<input id="pwd" type="password" placeholder="Password likho">
-<button onclick="unlock()">Unlock Chat</button>
-<p id="err" style="color:#ff5a5a;font-size:13px;margin-top:10px;display:none">Galat password!</p>
-<p style="color:#8696a0;font-size:11px;margin-top:12px">Password: DOST123 (baad me badal sakte ho)</p>
-</div>
-</div>
-
-<div id="app">
-<div class="top"><b>OurGram</b> <span style="color:#00a884;font-size:11px">● Secure</span><input id="username" placeholder="Naam" style="margin-left:auto;padding:6px 10px;border-radius:8px;border:none;background:#2a3942;color:#fff;width:120px"></div>
-<div id="msgs"></div>
-<div class="bar"><input id="msgIn" placeholder="Message..." onkeydown="if(event.key==='Enter')sendMsg()"><button onclick="sendMsg()">➤</button></div>
-</div>
-
+<div id="lock"><div class="lock-card"><div style="font-size:40px">🔒</div><h2>OurGram Private</h2><p style="color:#8696a0;font-size:13px;margin-top:8px">Secret key se hi entry milegi</p><input id="pwd" type="password" placeholder="Secret key"><button onclick="unlock()">Unlock</button><p id="err" style="color:#ff5a5a;display:none;margin-top:8px">Galat key!</p></div></div>
+<div id="app"><div class="app-wrap"><div class="sidebar"><div style="padding:12px;background:#202c33;display:flex;gap:10px;align-items:center"><div class="avatar">OG</div><b>OurGram</b></div><div style="padding:10px"><input id="username" placeholder="Apna naam" style="width:100%;padding:9px;border-radius:8px;border:none;background:#2a3942;color:#fff"></div></div><div style="flex:1;display:flex;flex-direction:column"><div style="padding:12px;background:#202c33"><b>Private Group</b> <span style="color:#00a884;font-size:11px">● secure</span></div><div id="msgs"></div><div class="bar"><input id="msgIn" placeholder="Message..." onkeydown="if(event.key==='Enter')sendMsg()"><button onclick="sendMsg()" style="width:44px;height:44px;border-radius:50%;border:none;background:#00a884;color:#fff">➤</button></div></div></div></div>
 <script>
-const PASS="DOST123"; // <-- YAHAN PASSWORD BADAL SAKTA HAI
-const URL="https://wjxxkudhmzqovjfdyqss.supabase.co";
-const KEY="sb_publishable_d2iJ7A2kLJgG0v3eRqJzQw_5bQhYQpQ";
-const sb=supabase.createClient(URL,KEY);
-
-function unlock(){
- if(document.getElementById('pwd').value===PASS){
-  localStorage.setItem('unlocked','yes');
-  document.getElementById('lock').style.display='none';
-  document.getElementById('app').style.display='flex';
-  start();
- }else{ document.getElementById('err').style.display='block'; }
-}
-if(localStorage.getItem('unlocked')==='yes'){document.getElementById('lock').style.display='none';document.getElementById('app').style.display='flex';}
-
-async function start(){load(); sb.channel('c').on('postgres_changes',{event:'INSERT',schema:'public',table:'chats'},d=>show(d.new)).subscribe();}
-async function load(){let {data}=await sb.from('chats').select('*').order('created_at',{ascending:true}).limit(200);document.getElementById('msgs').innerHTML='';(data||[]).forEach(show);}
-function show(m){let me=(document.getElementById('username').value||'')===m.sender;let d=document.createElement('div');d.className='bubble '+(me?'me':'other');d.innerHTML=`<div style="font-size:11px;color:#25d366">${m.sender}</div>${m.message}`;document.getElementById('msgs').appendChild(d);document.getElementById('msgs').scrollTop=99999;}
-async function sendMsg(){let t=document.getElementById('msgIn').value.trim();let s=document.getElementById('username').value.trim()||'Anon';if(!t)return;document.getElementById('msgIn').value='';localStorage.setItem('name',s);await sb.from('chats').insert([{sender:s,message:t}]);}
-document.getElementById('username').value=localStorage.getItem('name')||'';
-if(localStorage.getItem('unlocked')==='yes') start();
+const SECRET_KEY="gram00";
+const sb=supabase.createClient("https://wjxxkudhmzqovjfdyqss.supabase.co","sb_publishable_d2iJ7A2kLJgG0v3eRqJzQw_5bQhYQpQ");
+function unlock(){if(document.getElementById('pwd').value===SECRET_KEY){localStorage.setItem('ok','1');document.getElementById('lock').style.display='none';document.getElementById('app').style.display='block';init();}else{document.getElementById('err').style.display='block';}}
+if(localStorage.getItem('ok')==='1'){document.getElementById('lock').style.display='none';document.getElementById('app').style.display='block';}
+async function init(){let {data}=await sb.from('chats').select('*').order('created_at',{ascending:true}).limit(300);document.getElementById('msgs').innerHTML='';(data||[]).forEach(add);sb.channel('c').on('postgres_changes',{event:'INSERT',schema:'public',table:'chats'},p=>add(p.new)).subscribe();}
+function add(m){let me=(document.getElementById('username').value===m.sender);let d=document.createElement('div');d.className='bubble '+(me?'me':'other');d.innerHTML=`<b style="font-size:11px;color:#25d366">${m.sender}</b><br>${m.message}<span style="font-size:10px;color:#8696a0;float:right;margin-top:4px">${new Date(m.created_at).toLocaleTimeString()} ✓✓</span>`;document.getElementById('msgs').appendChild(d);document.getElementById('msgs').scrollTop=99999;}
+async function sendMsg(){let t=document.getElementById('msgIn').value.trim();let s=document.getElementById('username').value.trim()||'User';if(!t)return;document.getElementById('msgIn').value='';localStorage.setItem('nm',s);await sb.from('chats').insert([{sender:s,message:t}]);}
+document.getElementById('username').value=localStorage.getItem('nm')||'';if(localStorage.getItem('ok')==='1')init();
 </script>
 </body>
 </html>
