@@ -1,61 +1,17 @@
 <!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Ourgram</title>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-<style>
-*{font-family:'Inter',sans-serif;box-sizing:border-box}
-body{margin:0;background:#111b21;display:flex;justify-content:center;height:100vh}
-.app{width:100%;max-width:480px;background:#0b141a;display:flex;flex-direction:column;position:relative}
-.header{background:#202c33;color:#fff;padding:12px 15px;display:flex;align-items:center;gap:12px}
-.header b{font-size:19px}
-.chat{flex:1;overflow-y:auto;padding:15px 10px;background:#0b141a;background-image:url('https://user-images.githubusercontent.com/15075759/28719144-86dc0f70-73b1-11e7-911d-60d70fcded21.png');background-repeat:repeat}
-.bubble{max-width:78%;padding:8px 10px;border-radius:8px;margin:6px 0;position:relative;word-wrap:break-word;font-size:14.5px;line-height:19px}
-.me{background:#005c4b;color:#e9edef;margin-left:auto;border-top-right-radius:0}
-.other{background:#202c33;color:#e9edef;margin-right:auto;border-top-left-radius:0}
-.meta{font-size:11px;opacity:0.6;text-align:right;margin-top:4px}
-.inputbar{background:#202c33;padding:8px;display:flex;align-items:center;gap:8px}
-.inputbar input{flex:1;background:#2a3942;border:0;padding:12px 14px;border-radius:22px;color:#fff;outline:none}
-.icon{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#2a3942;color:#aebac1;font-size:20px;cursor:pointer;border:0}
-.send{background:#00a884;color:#fff}
-.emoji-panel{position:absolute;bottom:65px;left:10px;background:#233138;padding:10px;border-radius:12px;display:none;grid-template-columns:repeat(7,1fr);gap:6px;max-width:280px;z-index:10}
-.emoji-panel span{font-size:22px;cursor:pointer}
-.namebox{position:absolute;inset:0;background:#111b21;z-index:20;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:15px;color:#fff}
-.namebox input{padding:12px 15px;border-radius:10px;border:0;width:80%;background:#202c33;color:#fff}
-.namebox button{padding:12px 25px;border-radius:20px;border:0;background:#00a884;color:#fff;font-weight:bold}
-</style>
-</head>
-<body>
-<div class="app">
-<div class="header"><b>Ourgram</b><div style="margin-left:auto;opacity:.6;font-size:13px" id="meName"></div></div>
-<div class="chat" id="chat"></div>
-<div class="emoji-panel" id="emojis"></div>
-<div class="inputbar">
-<button class="icon" onclick="toggleEmoji()">😊</button>
-<button class="icon" onclick="document.getElementById('file').click()">📎</button>
-<input type="file" id="file" hidden onchange="sendFile(this)">
-<input id="msg" placeholder="Message" onkeydown="if(event.key==='Enter')send()">
-<button class="icon send" onclick="send()">➤</button>
-</div>
-<div class="namebox" id="namebox">
-<h3 style="margin:0">Apna naam batao?</h3>
-<input id="nameInput" placeholder="Jaise - Ram">
-<button onclick="saveName()">Chalo shuru karte hain</button>
-</div>
-</div>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>OurGram - Secure</title><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><style>*{margin:0;padding:0;box-sizing:border-box;font-family:sans-serif}body{background:#111b21;color:#e9edef;height:100vh}#lock{position:fixed;inset:0;background:#111b21;display:flex;align-items:center;justify-content:center;z-index:999;padding:20px}.box{background:#202c33;padding:30px;border-radius:16px;width:100%;max-width:360px;text-align:center}.box input{width:100%;padding:14px;border-radius:10px;border:none;background:#2a3942;color:#fff;margin:12px 0}.box button{width:100%;padding:14px;border:none;border-radius:10px;background:#00a884;color:#fff;font-weight:600;cursor:pointer}#app{display:flex;height:100vh;display:none}.side{width:35%;min-width:280px;background:#111b21;border-right:1px solid #222d34;display:flex;flex-direction:column}.chat{flex:1;display:flex;flex-direction:column;background:#0b141a}.top{background:#202c33;padding:12px;display:flex;gap:10px;align-items:center}.msgs{flex:1;overflow:auto;padding:20px}.b{max-width:65%;padding:8px 12px;border-radius:8px;margin-bottom:8px;font-size:14px}.me{background:#005c4b;margin-left:auto}.other{background:#202c33}.inputbar{background:#202c33;padding:8px;display:flex;gap:8px}.inputbar input{flex:1;padding:12px;border-radius:24px;border:none;background:#2a3942;color:#fff}</style></head><body>
+<div id="lock"><div class="box"><h2>🔒 OurGram Secure</h2><p style="font-size:13px;color:#8696a0;margin:10px 0">Password daalo tabhi andar aaoge</p><input id="pwd" type="password" placeholder="Password..."><button onclick="unlock()">Enter Chat</button><p style="margin-top:12px;font-size:12px">Default: <b style="color:#00a884">DOST123</b></p><p id="err" style="color:#f15c6d;display:none">Galat password!</p></div></div>
+<div id="app"><div class="side"><div class="top"><b>OurGram</b></div><div style="padding:12px"><input id="username" placeholder="Apna naam..." style="width:100%;padding:10px;border-radius:8px;border:none;background:#2a3942;color:#fff"></div></div><div class="chat"><div class="top"><b>Private Group</b><span style="color:#00a884;font-size:11px"> ● Secure</span></div><div class="msgs" id="msgs"></div><div class="inputbar"><input id="msgIn" placeholder="Message..." onkeydown="if(event.key==='Enter')sendMsg()"><button onclick="sendMsg()" style="width:44px;height:44px;border-radius:50%;background:#00a884;border:none;color:#fff">➤</button></div></div></div>
 <script>
-const supa=supabase.createClient("https://lupdgnuenlwkacrpndqm.supabase.co","sb_publishable_jb96cnbFDHDaK-2PxJ3BRg_plxW4MRV");
-let myName=localStorage.getItem('ourgram_name')||'';
-if(myName){document.getElementById('namebox').style.display='none';document.getElementById('meName').innerText=myName}
-function saveName(){let v=document.getElementById('nameInput').value.trim();if(!v)return;myName=v;localStorage.setItem('ourgram_name',v);document.getElementById('namebox').style.display='none';document.getElementById('meName').innerText=v;load()}
-const em=["😊","😂","❤️","🔥","👍","🙏","😍","🥺","😭","😎","🤩","😅","🫡","👏","💀","✨","🌸","💯","😇","🤝"];let ep=document.getElementById('emojis');em.forEach(e=>{let s=document.createElement('span');s.innerText=e;s.onclick=()=>{document.getElementById('msg').value+=e;ep.style.display='none'};ep.appendChild(s)});
-function toggleEmoji(){ep.style.display=ep.style.display==='grid'?'none':'grid'}
-async function load(){let{data}=await supa.from('chats').select('*').order('id',{ascending:true});let c=document.getElementById('chat');c.innerHTML='';data.forEach(m=>{let isMe=m.sender===myName;let d=document.createElement('div');d.className='bubble '+(isMe?'me':'other');let content='';if(m.type==='image')content=`<img src="${m.file_url}" style="max-width:200px;border-radius:8px"><br>${m.msg}`;else if(m.type==='file')content=`<a href="${m.file_url}" target="_blank" style="color:#53bdeb">📄 File dekho</a><br>${m.msg}`;else content=m.msg.replace(/</g,'&lt;');d.innerHTML=`<div style="font-size:12px;font-weight:600;color:${isMe?'#53bdeb':'#00a884'};margin-bottom:2px">${m.sender||'Anon'}</div>${content}<div class="meta">${new Date(m.created_at).toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'})} ✓✓</div>`;c.appendChild(d)});c.scrollTop=c.scrollHeight}
-async function send(){let i=document.getElementById('msg');let t=i.value.trim();if(!t)return;i.value='';await supa.from('chats').insert({msg:t,sender:myName||'Anon',type:'text'});load()}
-async function sendFile(inp){let f=inp.files[0];if(!f)return;let name=Date.now()+'_'+f.name;let{error}=await supa.storage.from('files').upload(name,f);if(error){alert('Upload fail: '+error.message);return}let{data}=supa.storage.from('files').getPublicUrl(name);let type=f.type.startsWith('image')?'image':'file';await supa.from('chats').insert({msg:f.name,sender:myName,file_url:data.publicUrl,type:type});load()}
-supa.channel('chat').on('postgres_changes',{event:'INSERT',schema:'public',table:'chats'},load).subscribe();load();
-</script>
-</body>
-</html>
+const GROUP_PASSWORD="DOST123";
+const SUPABASE_URL="https://wjxxkudhmzqovjfdyqss.supabase.co";
+const SUPABASE_KEY="sb_publishable_d2iJ7A2kLJgG0v3eRqJzQw_5bQhYQpQ";
+const supabaseClient=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+function unlock(){if(document.getElementById('pwd').value.trim()===GROUP_PASSWORD){localStorage.setItem('og_unlocked','1');document.getElementById('lock').style.display='none';document.getElementById('app').style.display='flex';initChat();}else{document.getElementById('err').style.display='block';}}
+if(localStorage.getItem('og_unlocked')==='1'){document.getElementById('lock').style.display='none';document.getElementById('app').style.display='flex';}
+function initChat(){loadMsgs();supabaseClient.channel('chats').on('postgres_changes',{event:'INSERT',schema:'public',table:'chats'},p=>addMsg(p.new)).subscribe();}
+async function loadMsgs(){let {data}=await supabaseClient.from('chats').select('*').order('created_at',{ascending:true}).limit(200);document.getElementById('msgs').innerHTML='';(data||[]).forEach(m=>addMsg(m));}
+function addMsg(m){const me=(document.getElementById('username').value.trim()||'Me')===m.sender;const d=document.createElement('div');d.className='b '+(me?'me':'other');d.innerHTML=`<div style="font-size:11px;color:#00a884">${m.sender}</div>${m.message}<div style="font-size:10px;color:#8696a0;text-align:right">${new Date(m.created_at).toLocaleTimeString()}</div>`;document.getElementById('msgs').appendChild(d);document.getElementById('msgs').scrollTop=document.getElementById('msgs').scrollHeight;}
+async function sendMsg(){const t=document.getElementById('msgIn').value.trim();const s=document.getElementById('username').value.trim()||'Anonymous';if(!t)return;document.getElementById('msgIn').value='';await supabaseClient.from('chats').insert([{sender:s,message:t}]);}
+document.getElementById('username').value=localStorage.getItem('og_name')||'';document.getElementById('username').addEventListener('change',e=>localStorage.setItem('og_name',e.target.value));if(localStorage.getItem('og_unlocked')==='1')initChat();
+</script></body></html>
